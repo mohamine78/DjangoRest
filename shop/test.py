@@ -6,6 +6,7 @@ from rest_framework.test import APITestCase
 from shop.models import Category, Product
 from shop.mock import mock_openfoodfact_success, ECOSCORE_GRADE
 
+
 class ShopAPITestCase(APITestCase):
 
     @classmethod
@@ -61,6 +62,7 @@ class TestCategory(ShopAPITestCase):
 
     url = reverse_lazy('category-list')
 
+    @mock.patch('shop.models.Product.call_external_api', mock_openfoodfact_success)
     def test_list(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -77,13 +79,12 @@ class TestProduct(ShopAPITestCase):
 
     url = reverse_lazy('product-list')
 
-    @mock.patch('shop.models.Product.call_external.api', mock_openfoodfact_success)
     def test_list(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.get_product_list_data([self.product, self.product_2]), response.json()['results'])
 
-    @mock.patch('shop.models.Product.call_external.api', mock_openfoodfact_success)
+    @mock.patch('shop.models.Product.call_external_api', mock_openfoodfact_success) 
     def test_list_filter(self):
         response = self.client.get(self.url + '?category_id=%i' % self.category.pk)
         self.assertEqual(response.status_code, 200)

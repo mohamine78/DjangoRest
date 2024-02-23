@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from shop.models import Category, Product,Article 
 
- 
+from shop.models import Category, Product, Article
+
 
 class ArticleSerializer(serializers.ModelSerializer):
 
